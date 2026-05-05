@@ -8,6 +8,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return Recipe.objects.none()
         return Recipe.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):

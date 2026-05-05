@@ -1,13 +1,13 @@
 import { useState } from "react";
-import API from "../api/axios";
+import API from "../api";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const loginUser = async () => {
+  const handleLogin = async () => {
     try {
-      const res = await API.post("/user/token/", {
+      const res = await API.post("user/token/", {
         email,
         password,
       });
@@ -15,32 +15,20 @@ function Login() {
       localStorage.setItem("access", res.data.access);
       localStorage.setItem("refresh", res.data.refresh);
 
-      alert("Login Successful!");
-      window.location.href = "/recipes";
+      alert("Login successful");
     } catch (err) {
-      alert("Login Failed");
-      console.log(err);
+      console.error(err);
+      alert("Login failed");
     }
   };
 
   return (
-    <div style={{ padding: 20 }}>
+    <div>
       <h2>Login</h2>
-
-      <input
-        placeholder="Email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <br />
-
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <br />
-
-      <button onClick={loginUser}>Login</button>
+      <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
+      <input placeholder="Password" type="password"
+        onChange={(e) => setPassword(e.target.value)} />
+      <button onClick={handleLogin}>Login</button>
     </div>
   );
 }

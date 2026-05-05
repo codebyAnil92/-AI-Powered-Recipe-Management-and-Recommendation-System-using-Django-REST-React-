@@ -1,18 +1,12 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from rest_framework import generics, permissions
 from django.contrib.auth import get_user_model
+from .serializers import UserSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
-User = get_user_model()
+class CreateUserView(generics.CreateAPIView):
+    queryset = get_user_model().objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.AllowAny]
 
-@api_view(['POST'])
-def create_user(request):
-    email = request.data['email']
-    password = request.data['password']
-
-    user = User.objects.create_user(
-        username=email,
-        email=email,
-        password=password
-    )
-
-    return Response({"message": "User created"})
+class CreateTokenView(TokenObtainPairView):
+    permission_classes = [permissions.AllowAny]

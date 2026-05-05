@@ -1,28 +1,27 @@
 import { useEffect, useState } from "react";
-import API from "../api/axios";
+import API from "../api";
 
 function Recipes() {
   const [recipes, setRecipes] = useState([]);
 
-  const getRecipes = async () => {
+  useEffect(() => {
+    fetchRecipes();
+  }, []);
+
+  const fetchRecipes = async () => {
     try {
-      const res = await API.get("/recipe/recipes/");
+      const res = await API.get("recipe/recipes/");
       setRecipes(res.data);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
-  useEffect(() => {
-    getRecipes();
-  }, []);
-
   return (
-    <div style={{ padding: 20 }}>
-      <h2>My Recipes</h2>
-
+    <div>
+      <h2>Recipes</h2>
       {recipes.map((r) => (
-        <div key={r.id} style={{ border: "1px solid gray", margin: 10 }}>
+        <div key={r.id}>
           <h3>{r.title}</h3>
           <p>{r.ingredients}</p>
         </div>

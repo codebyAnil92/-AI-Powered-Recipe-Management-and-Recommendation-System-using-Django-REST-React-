@@ -1,15 +1,18 @@
-import os
 from pathlib import Path
 from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'x_4+ly=8_&&+bl3ykh5qmgtxqe)c9ruzk3dn6%kw#t)f)lt)o0'
+# SECURITY
+
+SECRET_KEY = 'b@l*)%)=-nvyu+%tk8zcjervd5thii@arz!g@bs@fre(vk1(a@'
 
 DEBUG = True
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-ALLOWED_HOSTS = []
 
+ALLOWED_HOSTS = ['*']  # for development
+
+
+# APPLICATIONS
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -17,17 +20,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'rest_framework',
-    "corsheaders",
-    'rest_framework_simplejwt',
+    'drf_yasg',
+
     'user',
     'recipe',
 ]
 
-STATIC_URL = 'static/'
 
-AUTH_USER_MODEL = 'user.User'
-
+# MIDDLEWARE (VERY IMPORTANT)
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -35,15 +37,16 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-        "corsheaders.middleware.CorsMiddleware",
 ]
+
 
 ROOT_URLCONF = 'core.urls'
 
+
+# TEMPLATES (REQUIRED FOR ADMIN)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  # you can add templates folder later
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -55,8 +58,12 @@ TEMPLATES = [
         },
     },
 ]
+
+
 WSGI_APPLICATION = 'core.wsgi.application'
 
+
+# DATABASE (SQLite)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -64,14 +71,51 @@ DATABASES = {
     }
 }
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# CUSTOM USER MODEL (IMPORTANT)
+AUTH_USER_MODEL = 'user.User'
+
+
+# PASSWORD VALIDATION
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+]
+
+
+# INTERNATIONALIZATION
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+USE_TZ = True
+
+
+# STATIC FILES
+STATIC_URL = 'static/'
+
+
+# DEFAULT PRIMARY KEY
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# DJANGO REST FRAMEWORK
 REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',  # ✅ allow swagger
+    ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    )
+}
+
+
+# JWT SETTINGS
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
